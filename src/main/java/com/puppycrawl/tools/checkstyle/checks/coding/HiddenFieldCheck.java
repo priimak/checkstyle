@@ -59,6 +59,39 @@ import org.apache.commons.beanutils.ConversionException;
  * &lt;/module&gt;
  * </pre>
  * <p>
+ * A method is recognized as a setter if it is in the following form
+ * <pre>
+ * ${returnType} set${Name}(${anyType} ${name}) { ... }
+ * </pre>
+ * where ${anyType} is any primitive type, class or interface name;
+ * ${name} is name of the variable that is being set and ${Name} its
+ * capitalized form that appears in the method name. By default it is expected
+ * that setter returns void, i.e. ${returnType} is 'void'. For example
+ * <pre>
+ * void setTime(long time) { ... }
+ * </pre>
+ * Any other return types are disallowed. However, by setting
+ * <em>setterCanReturnItsClass</em> property to <em>true</em> definition of
+ * a setter is expanded, so that setter return type can also be a class in
+ * which setter is declared. For example
+ * <pre>
+ * class PageBuilder {
+ *   PageBuilder setName(String name) { ... }
+ * }
+ * </pre>
+ * Such methods are known as chain-setters and a common when Builder-pattern
+ * is used. Property <em>setterCanReturnItsClass</em> has effect only if
+ * <em>ignoreSetter</em> is set to true.
+ * <p>
+ * An example of how to configure the check so that it ignores the parameter
+ * of either a setter that returns void or a chain-setter.
+ * <pre>
+ * &lt;module name="HiddenField"&gt;
+ *    &lt;property name="ignoreSetter" value="true"/&gt;
+ *    &lt;property name="setterCanReturnItsClass" value="true"/&gt;
+ * &lt;/module&gt;
+ * </pre>
+ * <p>
  * An example of how to configure the check so that it ignores constructor
  * parameters is:
  * </p>
@@ -67,8 +100,7 @@ import org.apache.commons.beanutils.ConversionException;
  *    &lt;property name="ignoreConstructorParameter" value="true"/&gt;
  * &lt;/module&gt;
  * </pre>
- * @author Rick Giles
- * @version 1.0
+ * @author Dmitri Priimak
  */
 public class HiddenFieldCheck
     extends Check
@@ -84,11 +116,25 @@ public class HiddenFieldCheck
     /** controls whether to check the parameter of a property setter method */
     private boolean mIgnoreSetter;
 
+    /**
+     * if ignoreSetter is set to true then this variable controls what
+     * the setter method can return By default setter must return void.
+     * However, is this variable is set to true then setter can also
+     * return class in which is declared.
+     */
+    private boolean mSetterCanReturnItsClass;
+
     /** controls whether to check the parameter of a constructor */
     private boolean mIgnoreConstructorParameter;
 
     /** controls whether to check the parameter of abstract methods. */
     private boolean mIgnoreAbstractMethods;
+
+    /**
+     * HiddenFieldCheck is applicable only in the actual methods, which can
+     * exists only within a class, name of which is captured in this variable.
+     */
+    private String mInClassName;
 
     @Override
     public int[] getDefaultTokens()
@@ -130,8 +176,9 @@ public class HiddenFieldCheck
     @Override
     public void visitToken(DetailAST aAST)
     {
-        if ((aAST.getType() == TokenTypes.VARIABLE_DEF)
-            || (aAST.getType() == TokenTypes.PARAMETER_DEF))
+        final int type = aAST.getType();
+        if ((type == TokenTypes.VARIABLE_DEF)
+            || (type == TokenTypes.PARAMETER_DEF))
         {
             processVariable(aAST);
             return;
@@ -146,8 +193,12 @@ public class HiddenFieldCheck
         final boolean isStaticInnerType =
                 (typeMods != null)
                         && typeMods.branchContains(TokenTypes.LITERAL_STATIC);
-        final FieldFrame frame =
-                new FieldFrame(mCurrentFrame, isStaticInnerType);
+
+        if (type == TokenTypes.CLASS_DEF) {
+            mInClassName = aAST.findFirstToken(TokenTypes.IDENT).getText();
+        }
+
+        final FieldFrame frame = new FieldFrame(mCurrentFrame, isStaticInnerType);
 
         //add fields to container
         final DetailAST objBlock = aAST.findFirstToken(TokenTypes.OBJBLOCK);
@@ -242,7 +293,12 @@ public class HiddenFieldCheck
     /**
      * Decides whether to ignore an AST node that is the parameter of a
      * setter method, where the property setter method for field 'xyz' has
-     * name 'setXyz', one parameter named 'xyz', and return type void.
+     * name 'setXyz', one parameter named 'xyz', and return type void
+     * (default behavior) or return type is name of the class in which
+     * such method is declared (allowed only if
+     * {@link #setSetterCanReturnItsClass(boolean)} is called with
+     * value <em>true</em>)
+     *
      * @param aAST the AST to check.
      * @param aName the name of aAST.
      * @return true if aAST should be ignored because check property
@@ -255,27 +311,57 @@ public class HiddenFieldCheck
         {
             return false;
         }
+
         //single parameter?
         final DetailAST parametersAST = aAST.getParent();
         if (parametersAST.getChildCount() != 1) {
             return false;
         }
+
         //method parameter, not constructor parameter?
         final DetailAST methodAST = parametersAST.getParent();
         if (methodAST.getType() != TokenTypes.METHOD_DEF) {
             return false;
         }
-        //void?
-        final DetailAST typeAST = methodAST.findFirstToken(TokenTypes.TYPE);
-        if (!typeAST.branchContains(TokenTypes.LITERAL_VOID)) {
-            return false;
-        }
 
         //property setter name?
         final String methodName =
-                methodAST.findFirstToken(TokenTypes.IDENT).getText();
+            methodAST.findFirstToken(TokenTypes.IDENT).getText();
         final String expectedName = "set" + capitalize(aName);
-        return methodName.equals(expectedName);
+        if (!methodName.equals(expectedName)) {
+            // method name did not match set${Name}(${anyType} ${aName})
+            // where ${Name} is capitalized version of ${aName} therefore
+            // this method is not considered to be a setter and will not
+            // be ignored even though mIgnoreSetter is true
+            return false;
+        }
+
+        // Does it return void or class in which it is declared?
+        final DetailAST typeAST = methodAST.findFirstToken(TokenTypes.TYPE);
+        if (typeAST.branchContains(TokenTypes.LITERAL_VOID)) {
+            // this method has signature
+            //
+            //     void set${Name}(${anyType} ${name})
+            //
+            // and therefore considered to be a setter for which we ignore
+            // HiddenField check since mIgnoreSetter is set to true
+            return true;
+        }
+
+        // if we are here then return type is not void.
+        if (!mSetterCanReturnItsClass) {
+            // if we are here then method is considered to be a
+            // setter only if it returns void and this method
+            // does not return void and therefore HiddenField check
+            // will not be ignored
+            return false;
+        }
+
+        // if we are here then setter can return class in which
+        // it is declared. returnType contains string representation
+        // what this method returns.
+        final String returnType = typeAST.getFirstChild().getText();
+        return mInClassName.equals(returnType);
     }
 
     /**
@@ -364,6 +450,22 @@ public class HiddenFieldCheck
     public void setIgnoreSetter(boolean aIgnoreSetter)
     {
         mIgnoreSetter = aIgnoreSetter;
+    }
+
+    /**
+     * Controls if setter can return only void (default behavior) or it
+     * can also return class in which it is declared.
+     *
+     * @param aSetterCanReturnItsClass if true then setter can return
+     *        either void or class in which it is declared. If false then
+     *        in order to be recognized as setter method (otherwise
+     *        already recognized as a setter) must return void.  Later is
+     *        the default behavior.
+     */
+    public void setSetterCanReturnItsClass(
+        boolean aSetterCanReturnItsClass)
+    {
+        mSetterCanReturnItsClass = aSetterCanReturnItsClass;
     }
 
     /**

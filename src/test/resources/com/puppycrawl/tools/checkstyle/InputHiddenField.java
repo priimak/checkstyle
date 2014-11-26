@@ -237,3 +237,22 @@ class Bug3370946 {
         this.xAxis = xAxis;
     }
 }
+
+/** tests chain-setter */
+class PropertySetter3
+{
+    private int prop;
+
+    /** 
+     * if setterCanReturnItsClass == false then 
+     *     error - not a void method
+     * 
+     * if setterCanReturnItsClass == true then 
+     *     success as it is then considered to be a setter  
+     */
+    public PropertySetter3 setProp(int prop)
+    {
+        this.prop = prop;
+        return this;
+    }
+}
