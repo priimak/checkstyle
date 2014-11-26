@@ -1,11 +1,8 @@
-[![][trend img]][trend]
 [![][travis img]][travis]
 [![][coverage img]][coverage]
 [![][sonar img]][sonar]
 
-
-CHECKSTYLE 
-==========
+![](https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/site/resources/images/logo.png)
 
 This directory contains the distribution for checkstyle. It is a tool for
 checking Java source code for adherence to a set of rules.
@@ -53,11 +50,8 @@ https://github.com/checkstyle/checkstyle/issues
 [travis]:http://travis-ci.org/checkstyle/checkstyle
 [travis img]:https://secure.travis-ci.org/checkstyle/checkstyle.png
 
-[trend img]:https://d2weczhvl823v0.cloudfront.net/romani/checkstyle/trend.png
-[trend]:https://bitdeli.com/free
-
 [sonar]:http://nemo.sonarqube.org/dashboard/index/com.puppycrawl.tools:checkstyle
-[sonar img]:https://dev.eclipse.org/sonar/images/sonarqube-24x100.png?1387490790
+[sonar img]:https://dev.eclipse.org/sonar/images/sonarqube-24x100.png
 
 [coverage]:https://coveralls.io/r/checkstyle/checkstyle
 [coverage img]:https://coveralls.io/repos/checkstyle/checkstyle/badge.png

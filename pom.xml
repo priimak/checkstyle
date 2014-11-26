@@ -16,13 +16,13 @@
   <parent>
     <artifactId>oss-parent</artifactId>
     <groupId>org.sonatype.oss</groupId>
-    <version>5</version>
+    <version>7</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.puppycrawl.tools</groupId>
   <artifactId>checkstyle</artifactId>
-  <version>5.8-SNAPSHOT</version>
+  <version>6.2-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>checkstyle</name>
   <url>http://checkstyle.sourceforge.net/</url>
@@ -53,9 +53,9 @@
 
   <distributionManagement>
     <site>
-      <id>checkstyle-snapshot-site</id>
+      <id>sourceforge-snapshot-site</id>
       <name>Snapshot Site</name>
-      <url>scp://shell.sourceforge.net/home/groups/c/ch/checkstyle/htdocs/snapshot</url>
+      <url>scp://shell.sourceforge.net/home/project-web/checkstyle/htdocs/snapshot</url>
     </site>
   </distributionManagement>
 
@@ -92,35 +92,35 @@
       <id>lkuehne</id>
       <name>Lars Kühne</name>
       <roles>
-        <role>developer</role>
+        <role>former developer</role>
       </roles>
     </developer>
     <developer>
       <id>rickgiles</id>
       <name>Rick Giles</name>
       <roles>
-        <role>developer</role>
+        <role>former developer</role>
       </roles>
     </developer>
     <developer>
       <id>o_sukhodolsky</id>
       <name>Oleg Sukhodolsky</name>
       <roles>
-        <role>developer</role>
+        <role>former developer</role>
       </roles>
     </developer>
     <developer>
       <id>mstudman</id>
       <name>Michael Studman</name>
       <roles>
-        <role>developer</role>
+        <role>former developer</role>
       </roles>
     </developer>
     <developer>
       <id>tschneeberger</id>
       <name>Travis Schneeberger</name>
       <roles>
-        <role>developer</role>
+        <role>former developer</role>
       </roles>
     </developer>
   </developers>
@@ -149,9 +149,9 @@
   <properties>
     <project.build.sourceEncoding>iso-8859-1</project.build.sourceEncoding>
     <projectVersion>${project.version}</projectVersion>
-    <tools.jar.version>1.5.0</tools.jar.version>
-    <tools.jar.path>${java.home}/../lib/tools.jar</tools.jar.path>
     <maven.site.plugin.version>3.4</maven.site.plugin.version>
+    <tools.jar.version>1.6.0</tools.jar.version>
+    <tools.jar.path>${java.home}/../lib/tools.jar</tools.jar.path>
   </properties>
 
   <dependencies>
@@ -159,6 +159,11 @@
       <groupId>antlr</groupId>
       <artifactId>antlr</artifactId>
       <version>2.7.7</version>
+    </dependency>
+    <dependency>
+      <groupId>org.antlr</groupId>
+      <artifactId>antlr4-runtime</artifactId>
+      <version>4.3</version>
     </dependency>
     <dependency>
       <groupId>commons-beanutils</groupId>
@@ -172,8 +177,8 @@
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
-      <artifactId>guava-jdk5</artifactId>
-      <version>14.0.1</version>
+      <artifactId>guava</artifactId>
+      <version>18.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.ant</groupId>
@@ -203,7 +208,7 @@
           <artifactId>lifecycle-mapping</artifactId>
           <version>1.0.0</version>
           <configuration>
-            <lifecycleMappingMetadata>
+            <lifecycleMappingMetadata>https://github.com/checkstyle/checkstyle/issues
               <pluginExecutions>
                 <pluginExecution>
                   <pluginExecutionFilter>
@@ -231,6 +236,34 @@
                     <execute />
                   </action>
                 </pluginExecution>
+				<pluginExecution>
+						<pluginExecutionFilter>
+							<groupId>org.antlr</groupId>
+							<artifactId>antlr4-maven-plugin</artifactId>
+							<versionRange>[4.0,)</versionRange>
+							<goals>
+								<goal>antlr4</goal>
+							</goals>
+						</pluginExecutionFilter>
+						<action>
+							<execute>
+								<runOnIncremental>true</runOnIncremental>
+							</execute>
+						</action>
+				</pluginExecution>
+				<pluginExecution>
+					<pluginExecutionFilter>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-enforcer-plugin</artifactId>
+						<versionRange>[1.2,)</versionRange>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+					</pluginExecutionFilter>
+					<action>
+						<ignore />
+					</action>
+				</pluginExecution>
               </pluginExecutions>
             </lifecycleMappingMetadata>
           </configuration>
@@ -244,8 +277,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
       </plugin>
 
@@ -257,12 +290,19 @@
           <xdocDirectory>${basedir}/src/xdocs</xdocDirectory>
           <validate>true</validate>
         </configuration>
+        <dependencies>
+          <dependency><!-- add support for ssh/scp -->
+            <groupId>org.apache.maven.wagon</groupId>
+            <artifactId>wagon-ssh</artifactId>
+            <version>1.0</version>
+          </dependency>
+        </dependencies>        
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>1.0.1</version>
+        <version>1.3.1</version>
         <executions>
           <execution>
             <id>enforce-versions</id>
@@ -272,15 +312,32 @@
             <configuration>
               <rules>
                 <requireJavaVersion>
-                  <version>1.5</version>
+                  <version>1.6</version>
                 </requireJavaVersion>
+                <!-- we can not use this as it require
+                compilation on 1.6 only, due to dependecy to 'tools'
+                <enforceBytecodeVersion>
+                  <maxJdkVersion>1.6</maxJdkVersion>
+                </enforceBytecodeVersion>
+                -->
               </rules>
             </configuration>
           </execution>
         </executions>
+        <!-- we can not use this as it require
+        compilation on 1.6 only, due to dependecy to 'tool'
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>extra-enforcer-rules</artifactId>
+            <version>1.0-beta-2</version>
+            <scope>compile</scope>
+          </dependency>
+        </dependencies>
+        -->
       </plugin>
 
-      <!-- Generate the grammar -->
+      <!-- Generate the ANTLRv2 grammar -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>antlr-maven-plugin</artifactId>
@@ -297,10 +354,30 @@
           </execution>
         </executions>
       </plugin>
+
+      <!-- Generate the ANTLRv4 grammar -->
+      <plugin>
+          <groupId>org.antlr</groupId>
+          <artifactId>antlr4-maven-plugin</artifactId>
+          <version>4.3</version>
+		  <configuration>
+		      <visitor>true</visitor>
+		      <sourceDirectory>${basedir}/src/main/resources/com/puppycrawl/tools/checkstyle/grammars/javadoc</sourceDirectory>
+		      <outputDirectory>${project.build.directory}/generated-sources/antlr/com/puppycrawl/tools/checkstyle/grammars/javadoc</outputDirectory>
+		  </configuration>
+          <executions>
+              <execution>
+                  <goals>
+                      <goal>antlr4</goal>
+                  </goals>
+              </execution>
+          </executions>
+      </plugin>
       
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.9.1</version>
         <executions>
           <execution>
             <id>add-source</id>
@@ -311,14 +388,15 @@
             <configuration>
               <sources>
                 <source>${project.build.directory}/generated-sources/antlr/</source>
+                <source>${project.build.directory}/generated-sources/antlr/javadoc</source>
               </sources>
             </configuration>
           </execution>
         </executions>
        </plugin>
       
-
       <!-- Generate checkstylecompilation.properties -->
+      
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -374,24 +452,6 @@
         </configuration>
       </plugin>
 
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2</version>
-        <executions>
-          <execution>
-            <id>runner</id>
-            <goals>
-              <goal>java</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <mainClass>com.puppycrawl.tools.checkstyle.gui.Main</mainClass>
-          <classpathScope>runtime</classpathScope>
-        </configuration>
-      </plugin>
-
       <!-- Ensure the manifest has all the gory details -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -426,9 +486,22 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-linkcheck-plugin</artifactId>
-        <version>1.1</version>
+        <version>1.2</version>
         <configuration>
-          <excludedLinks>**/apidocs/*</excludedLinks>
+	  <excludedPages>
+	    <excludedPage>dependencies.html</excludedPage>
+	  </excludedPages>
+	  <excludedLinks>
+	    <excludedLink>**apidocs/*</excludedLink>
+	    <excludedLink>reports/google-style/guava</excludedLink>
+	    <excludedLink>reports/javadoc/openjdk8</excludedLink>
+	    <excludedLink>https://travis-ci.org/checkstyle/checkstyle</excludedLink>
+	    <excludedLink>https://coveralls.io/r/checkstyle/checkstyle</excludedLink>
+	    <excludedLink>http://search.maven.org/*</excludedLink>
+	  </excludedLinks>
+          <excludedHttpStatusErrors>
+	    <excludedHttpStatusError>401</excludedHttpStatusError>
+	  </excludedHttpStatusErrors>
         </configuration>
       </plugin>
 
@@ -449,9 +522,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10</version>
+        <version>2.10.1</version>
         <configuration>
-          <source>1.5</source>
+          <source>1.6</source>
 	  <failOnError>false</failOnError>
 	  <linksource>true</linksource>
         </configuration>
@@ -468,7 +541,7 @@
       <plugin>
         <groupId>com.github.sevntu-checkstyle</groupId>
         <artifactId>dsm-maven-plugin</artifactId>
-        <version>2.1.1</version>
+        <version>2.1.3</version>
         <configuration>
           <obfuscatePackageNames>true</obfuscatePackageNames>
         </configuration>
@@ -477,11 +550,23 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-linkcheck-plugin</artifactId>
-<!--
+        <version>1.2</version>
         <configuration>
-          <excludedLinks>**/apidocs/*</excludedLinks>
+	  <excludedPages>
+	    <excludedPage>dependencies.html</excludedPage>
+	  </excludedPages>
+	  <excludedLinks>
+	    <excludedLink>**apidocs/*</excludedLink>
+	    <excludedLink>reports/google-style/guava</excludedLink>
+	    <excludedLink>reports/javadoc/openjdk8</excludedLink>
+	    <excludedLink>https://travis-ci.org/checkstyle/checkstyle</excludedLink>
+	    <excludedLink>https://coveralls.io/r/checkstyle/checkstyle</excludedLink>
+	    <excludedLink>http://search.maven.org/*</excludedLink>
+	  </excludedLinks>
+          <excludedHttpStatusErrors>
+	    <excludedHttpStatusError>401</excludedHttpStatusError>
+	  </excludedHttpStatusErrors>
         </configuration>
--->
       </plugin>
 
     </plugins>
@@ -508,6 +593,14 @@
 	              </goals>
 	            </execution>
 	          </executions>
+	          <configuration>
+	            <configLocation>checkstyle_checks.xml</configLocation>
+	            <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
+	            <suppressionsLocation>suppressions.xml</suppressionsLocation>
+	            <headerLocation>java.header</headerLocation>
+	            <propertyExpansion>checkstyle.importcontrol.file=import-control.xml</propertyExpansion>
+	            <enableFilesSummary>false</enableFilesSummary>
+	          </configuration>
 	        </plugin>
 
 	        <plugin>
@@ -541,7 +634,7 @@
 	                <goal>pmd</goal>
 	              </goals>
 	              <configuration>
-	                <targetJdk>1.5</targetJdk>
+	                <targetJdk>1.6</targetJdk>
 	                <minimumTokens>20</minimumTokens>
 	              </configuration>
 	            </execution>
@@ -615,6 +708,7 @@
                 <descriptor>config/assembly-bin.xml</descriptor>
                 <descriptor>config/assembly-src.xml</descriptor>
               </descriptors>
+              <tarLongFileMode>gnu</tarLongFileMode>
             </configuration>
             <executions>
               <execution>
@@ -637,7 +731,7 @@
 	          <groupId>org.apache.maven.plugins</groupId>
 	          <artifactId>maven-checkstyle-plugin</artifactId>
 	          <configuration>
-	            <configLocation>checkstyle_checks.xml</configLocation>
+	            <configLocation>${project.build.directory}/../checkstyle_checks.xml</configLocation>
 	            <suppressionsFileExpression>checkstyle.suppressions.file</suppressionsFileExpression>
 	            <suppressionsLocation>suppressions.xml</suppressionsLocation>
 	            <headerLocation>java.header</headerLocation>
@@ -682,7 +776,7 @@
 	          <groupId>org.apache.maven.plugins</groupId>
 	          <artifactId>maven-pmd-plugin</artifactId>
 	          <configuration>
-	            <targetJdk>1.5</targetJdk>
+	            <targetJdk>1.6</targetJdk>
 	            <minimumTokens>20</minimumTokens>
 	          </configuration>
 		      <reportSets>
@@ -708,9 +802,9 @@
       <id>release</id>
       <distributionManagement>
         <site>
-          <id>checkstyle-site</id>
+          <id>sourceforge-site</id>
           <name>Default Site</name>
-          <url>scp://shell.sourceforge.net/home/groups/c/ch/checkstyle/htdocs</url>
+          <url>scp://shell.sourceforge.net/home/project-web/checkstyle/htdocs</url>
         </site>
       </distributionManagement>
     </profile>
@@ -743,7 +837,8 @@
       </build>
     </profile>
 
-    <!-- Bring in tools.jar for platforms which provide it -->
+    <!-- Bring in tools.jar for platforms which provide it
+    that is required for javadoc docklets that are in use -->
     <profile>
       <id>tools.jar-sun</id>
       <activation>

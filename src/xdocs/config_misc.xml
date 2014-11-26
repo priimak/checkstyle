@@ -97,7 +97,7 @@
         <p>
           A check for <code>TODO:</code> comments. Actually
           it is a generic <a
-          href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html">regular
+          href="https://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html">regular
           expression</a> matcher on Java comments. To check for other
           patterns in Java comments, set the <code>format</code> property.
         </p>
@@ -815,6 +815,12 @@ messages.properties: Key 'ok' missing.
             <td><a href="property_types.html#integer">Integer</a></td>
             <td>4</td>
           </tr>
+          <tr>
+            <td>lineWrappingIndentation</td>
+            <td>how far continuation line should be indented when line-wrapping is present</td>
+            <td><a href="property_types.html#integer">Integer</a></td>
+            <td>4</td>
+          </tr>
         </table>
       </subsection>
 
@@ -979,9 +985,7 @@ d = e / f;        // Another comment for this line
         </p>
         <p>
           This check combines all the functionality provided by
-          <a href="config_header.html#RegexpHeader">RegexpHeader</a>,
-          <a href="config_misc.html#GenericIllegalRegexp">GenericIllegalRegexp</a>
-          and <a href="config_misc.html#RequiredRegexp">RequiredRegexp</a>,
+          <a href="config_header.html#RegexpHeader">RegexpHeader</a>
           except supplying the regular expression from a file.
         </p>
         <p>
@@ -1008,7 +1012,7 @@ d = e / f;        // Another comment for this line
           <b>Note:</b> Not all regular expression engines are created equal. Some provide extra
           functions that others do not and some elements of the syntax may vary.
           This check makes use of the <a
-          href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/package-summary.html">
+          href="https://docs.oracle.com/javase/7/docs/api/java/util/regex/package-summary.html">
           java.util.regex package</a>; please check its documentation for
           details of how to construct a regular expression to achieve a particular
           goal.
@@ -1079,9 +1083,7 @@ d = e / f;        // Another comment for this line
           this check in place of them.
         </p>
         <p>
-          <b>To use like <a
-          href="config_misc.html#RequiredRegexp">RequiredRegexp
-          </a>:</b>
+          <b>To use like Required Regexp check:</b>
         </p>
         <p>
           An example of how to configure the check to make sure a copyright
@@ -1131,9 +1133,7 @@ d = e / f;        // Another comment for this line
 &lt;/module&gt;
         </source>
         <p>
-          <b>To use like <a
-          href="config_misc.html#GenericIllegalRegexp">GenericIllegalRegexp
-          </a>:</b>
+          <b>To use like illegal regexp check:</b>
         </p>
         <p>
           An example of how to configure the check to make sure there are no
@@ -1168,11 +1168,6 @@ d = e / f;        // Another comment for this line
 &lt;/module&gt;
         </source>
         <p>
-          <b>Note:</b> The difference between this and the example given for
-          <a href="config_misc.html#genericIllegalRegexp">GenericIllegalRegexp</a>
-          is necessary because \s and $ both match the newline character ("\n").
-        </p>
-        <p>
           An example of how to configure the check to find case-insensitive
           occurrences of &quot;debug&quot;:
         </p>
@@ -1202,7 +1197,7 @@ d = e / f;        // Another comment for this line
         </source>
         <p>
           <b>To use like <a
-          href="config_misc.html#RegexpHeader">RegexpHeader
+          href="config_header.html#RegexpHeader">RegexpHeader
           </a>:</b>
         </p>
         <p>

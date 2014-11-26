@@ -18,8 +18,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.puppycrawl.tools.checkstyle.api;
 
-import com.google.common.collect.Sets;
 import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 /**
  * The base class for checks.
@@ -51,6 +52,11 @@ public abstract class Check extends AbstractViolationReporter
      * be set by my creator.
      */
     private ClassLoader mLoader;
+
+    public boolean isCommentNodesRequired()
+    {
+        return false;
+    }
 
     /**
      * Returns the default token a check is interested in. Only used if the
@@ -171,6 +177,16 @@ public abstract class Check extends AbstractViolationReporter
     public final String[] getLines()
     {
         return getFileContents().getLines();
+    }
+
+    /**
+     * Returns the line associated with the tree.
+     * @param aIndex index of the line
+     * @return the line from the file contents
+     */
+    public final String getLine(int aIndex)
+    {
+        return getFileContents().getLine(aIndex);
     }
 
     /**

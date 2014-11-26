@@ -18,11 +18,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.puppycrawl.tools.checkstyle.api;
 
-import com.google.common.collect.ImmutableMap;
-
-import com.puppycrawl.tools.checkstyle.grammars.GeneratedJavaTokenTypes;
 import java.lang.reflect.Field;
 import java.util.ResourceBundle;
+
+import com.google.common.collect.ImmutableMap;
+import com.puppycrawl.tools.checkstyle.grammars.GeneratedJavaTokenTypes;
 
 /**
  * Contains the constants for all the tokens contained in the Abstract
@@ -89,8 +89,10 @@ public final class TokenTypes
      * @see #LITERAL_NATIVE
      * @see #STRICTFP
      * @see #ANNOTATION
+     * @see #LITERAL_DEFAULT
      **/
     public static final int MODIFIERS = GeneratedJavaTokenTypes.MODIFIERS;
+
     /**
      * An object block.  These are children of class, interface, enum,
      * annotation and enum constant declarations.
@@ -733,6 +735,12 @@ public final class TokenTypes
      * @see FullIdent
      **/
     public static final int METHOD_CALL = GeneratedJavaTokenTypes.METHOD_CALL;
+
+    /**
+     * Part of Java 8 syntax. Method or constructor call without arguments.
+     * @see #DOUBLE_COLON
+     */
+    public static final int METHOD_REF = GeneratedJavaTokenTypes.METHOD_REF;
     /**
      * An expression.  Operators with lower precedence appear at a
      * higher level in the tree than operators with higher precedence.
@@ -1486,6 +1494,13 @@ public final class TokenTypes
      * @see #CASE_GROUP
      **/
     public static final int COLON = GeneratedJavaTokenTypes.COLON;
+
+    /**
+     * The <code>::</code> (double colon) operator.
+     * It is part of Java 8 syntax that is used for method reference.
+     * @see #METHOD_REF
+     */
+    public static final int DOUBLE_COLON = GeneratedJavaTokenTypes.DOUBLE_COLON;
     /**
      * The <code>if</code> keyword.
      *
@@ -1924,6 +1939,7 @@ public final class TokenTypes
      * children.
      *
      * @see #CASE_GROUP
+     * @see #MODIFIERS
      **/
     public static final int LITERAL_DEFAULT =
         GeneratedJavaTokenTypes.LITERAL_default;
@@ -3415,6 +3431,68 @@ public final class TokenTypes
      */
     public static final int GENERIC_END = GeneratedJavaTokenTypes.GENERIC_END;
 
+    /**
+     * Special lambda symbol '-&gt;'.
+     */
+    public static final int LAMBDA = GeneratedJavaTokenTypes.LAMBDA;
+
+    /**
+     * Begining of single line comment: '//'.
+     *
+     * <pre>
+     * +--SINLE_LINE_COMMENT
+     *         |
+     *         +--COMMENT_CONTENT
+     * </pre>
+     */
+    public static final int SINGLE_LINE_COMMENT =
+            GeneratedJavaTokenTypes.SINGLE_LINE_COMMENT;
+
+    /**
+     * Begining of block comment: '/*'.
+     *
+     * <pre>
+     * +--BLOCK_COMMENT_BEGIN
+     *         |
+     *         +--COMMENT_CONTENT
+     *         +--BLOCK_COMMENT_END
+     * </pre>
+     */
+    public static final int BLOCK_COMMENT_BEGIN =
+            GeneratedJavaTokenTypes.BLOCK_COMMENT_BEGIN;
+
+    /**
+     * End of block comment: '* /'.
+     *
+     * <pre>
+     * +--BLOCK_COMMENT_BEGIN
+     *         |
+     *         +--COMMENT_CONTENT
+     *         +--BLOCK_COMMENT_END
+     * </pre>
+     */
+    public static final int BLOCK_COMMENT_END =
+            GeneratedJavaTokenTypes.BLOCK_COMMENT_END;
+
+    /**
+     * Text of single-line or block comment.
+     *
+     *<pre>
+     * +--SINLE_LINE_COMMENT
+     *         |
+     *         +--COMMENT_CONTENT
+     * </pre>
+     *
+     * <pre>
+     * +--BLOCK_COMMENT_BEGIN
+     *         |
+     *         +--COMMENT_CONTENT
+     *         +--BLOCK_COMMENT_END
+     * </pre>
+     */
+    public static final int COMMENT_CONTENT =
+            GeneratedJavaTokenTypes.COMMENT_CONTENT;
+
     ////////////////////////////////////////////////////////////////////////
     // The interesting code goes here
     ////////////////////////////////////////////////////////////////////////
@@ -3508,5 +3586,32 @@ public final class TokenTypes
             "com.puppycrawl.tools.checkstyle.api.tokentypes";
         final ResourceBundle bundle = ResourceBundle.getBundle(tokentypes);
         return bundle.getString(aName);
+    }
+
+    /**
+     * Is argument comment-related type (SINGLE_LINE_COMMENT,
+     * BLOCK_COMMENT_BEGIN, BLOCK_COMMENT_END, COMMENT_CONTENT).
+     * @param aType
+     *        token type.
+     * @return true if aType is comment-related type.
+     */
+    public static boolean isCommentType(int aType)
+    {
+        return aType == TokenTypes.SINGLE_LINE_COMMENT
+                || aType == TokenTypes.BLOCK_COMMENT_BEGIN
+                || aType == TokenTypes.BLOCK_COMMENT_END
+                || aType == TokenTypes.COMMENT_CONTENT;
+    }
+
+    /**
+     * Is argument comment-related type name (SINGLE_LINE_COMMENT,
+     * BLOCK_COMMENT_BEGIN, BLOCK_COMMENT_END, COMMENT_CONTENT).
+     * @param aType
+     *        token type name.
+     * @return true if aType is comment-related type name.
+     */
+    public static boolean isCommentType(String aType)
+    {
+        return isCommentType(getTokenId(aType));
     }
 }

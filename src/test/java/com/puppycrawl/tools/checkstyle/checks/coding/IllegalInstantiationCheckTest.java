@@ -18,9 +18,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 package com.puppycrawl.tools.checkstyle.checks.coding;
 
+import java.io.File;
+
+import org.junit.Test;
+
 import com.puppycrawl.tools.checkstyle.BaseCheckTestSupport;
 import com.puppycrawl.tools.checkstyle.DefaultConfiguration;
-import org.junit.Test;
 
 public class IllegalInstantiationCheckTest
     extends BaseCheckTestSupport
@@ -47,5 +50,17 @@ public class IllegalInstantiationCheckTest
             "44:21: Instantiation of java.awt.Color should be avoided.",
         };
         verify(checkConfig, getPath("InputSemantic.java"), expected);
+    }
+
+    @Test
+    public void testJava8() throws Exception
+    {
+        final DefaultConfiguration checkConfig =
+                createCheckConfig(IllegalInstantiationCheck.class);
+        final String[] expected = {};
+        verify(checkConfig,
+                getPath("coding" + File.separator
+                        + "InputIllegalInstantiationCheckTest2.java"),
+                expected);
     }
 }

@@ -31,6 +31,10 @@
         </td>
       </tr>
       <tr>
+        <td><a href="config_annotation.html#AnnotationLocation">AnnotationLocation</a></td>
+        <td>Check location of annotation on language elements.</td>
+      </tr>
+      <tr>
         <td><a href="config_annotation.html#AnnotationUseStyle">AnnotationUseStyle</a></td>
         <td>This check controls the style with the usage of annotations.</td>
       </tr>
@@ -45,6 +49,10 @@
       <tr>
         <td><a href="config_misc.html#ArrayTypeStyle">ArrayTypeStyle</a></td>
         <td>Checks the style of array type definitions.</td>
+      </tr>
+      <tr>
+        <td><a href="config_javadoc.html#AtclauseOrder">AtclauseOrder</a></td>
+        <td>Checks the order of at-clauses.</td>
       </tr>
       <tr>
         <td><a href="config_misc.html#AvoidEscapedUnicodeCharacters">AvoidEscapedUnicodeCharacters</a></td>
@@ -82,14 +90,14 @@
         <td>The number of other classes a given class relies on.</td>
       </tr>
       <tr>
-        <td><a href="config_naming.html#ClassTypeParameterName">ClassTypeParameterName</a></td>
+        <td><a href="config_naming.html#Modules">ClassTypeParameterName</a></td>
         <td>
           Checks that class type parameter names conform to a format
           specified by the format property.
         </td>
       </tr>
       <tr>
-        <td><a href="config_naming.html#ConstantName">ConstantName</a></td>
+        <td><a href="config_naming.html#Modules">ConstantName</a></td>
         <td>Checks that constant names conform to a format specified by the format property.</td>
       </tr>
       <tr>
@@ -302,7 +310,7 @@
         Use Interfaces only to define types.</td>
       </tr>
       <tr>
-        <td><a href="config_naming.html#InterfaceTypeParameterName">InterfaceTypeParameterName</a></td>
+        <td><a href="config_naming.html#Modules">InterfaceTypeParameterName</a></td>
         <td>
           Checks that interface type parameter names conform to a format specified
         by the format property.</td>
@@ -324,6 +332,14 @@
       <tr>
         <td><a href="config_javadoc.html#JavadocPackage">JavadocPackage</a></td>
         <td>Checks that all packages have a package documentation.</td>
+      </tr>
+      <tr>
+        <td><a href="config_javadoc.html#JavadocTagContinuationIndentation">JavadocTagContinuationIndentation</a></td>
+        <td>Checks the indentation of the continuation lines in at-clauses.</td>
+      </tr>
+      <tr>
+        <td><a href="config_javadoc.html#JavadocParagraph">JavadocParagraph</a></td>
+        <td>Checks Javadoc paragraphs.</td>
       </tr>
       <tr>
         <td><a href="config_javadoc.html#JavadocStyle">JavadocStyle</a></td>
@@ -349,7 +365,7 @@
         <td>Checks for long lines.</td>
       </tr>
       <tr>
-        <td><a href="config_naming.html#LocalFinalVariableName">LocalFinalVariableName</a></td>
+        <td><a href="config_naming.html#Modules">LocalFinalVariableName</a></td>
         <td>
           Checks that local final variable names conform to a format specified
         by the format property.</td>
@@ -366,7 +382,7 @@
         Checks for magic numbers.</td>
       </tr>
       <tr>
-        <td><a href="config_naming.html#MemberName">MemberName</a></td>
+        <td><a href="config_naming.html#Modules">MemberName</a></td>
         <td>
           Checks that instance variable names conform to a format specified
         by the format property.</td>
@@ -394,7 +410,7 @@
         and the left parenthesis of the parameter list.</td>
       </tr>
       <tr>
-        <td><a href="config_naming.html#MethodTypeParameterName">MethodTypeParameterName</a></td>
+        <td><a href="config_naming.html#Modules">MethodTypeParameterName</a></td>
         <td>
           Checks that class type parameter names conform to a format specified
         by the format property.</td>
@@ -488,6 +504,11 @@
         using the name <em>finalize</em>.</td>
       </tr>
       <tr>
+        <td><a href="config_javadoc.html#NonEmptyAtclauseDescription">NonEmptyAtclauseDescription</a></td>
+        <td>
+        Checks that the at-clause tag is followed by description .</td>
+      </tr>
+      <tr>
         <td><a href="config_whitespace.html#NoLineWrap">NoLineWrap</a></td>
         <td>
         Checks that chosen statements are not line-wrapped.</td>
@@ -533,7 +554,7 @@
         <td>Ensures there is a package declaration and (optionally) in the correct directory.</td>
       </tr>
       <tr>
-        <td><a href="config_naming.html#PackageName">PackageName</a></td>
+        <td><a href="config_naming.html#Modules">PackageName</a></td>
         <td>
           Checks that package names conform to a format specified
         by the format property.</td>
@@ -544,7 +565,7 @@
         Disallow assignment of parameters.</td>
       </tr>
       <tr>
-        <td><a href="config_naming.html#ParameterName">ParameterName</a></td>
+        <td><a href="config_naming.html#Modules">ParameterName</a></td>
         <td>
           Checks that parameter names conform to a format specified
         by the format property.</td>
@@ -619,6 +640,11 @@
         Checks line wrapping with separators.</td>
       </tr>
       <tr>
+        <td><a href="config_javadoc.html#SingleLineJavadoc">SingleLineJavadoc</a></td>
+        <td>
+         Checks that a JavaDoc block which can fit on a single line and doesn't contain at-clauses</td>
+      </tr>
+      <tr>
         <td><a href="config_coding.html#SimplifyBooleanExpression">SimplifyBooleanExpression</a></td>
         <td>
         Checks for overly complicated boolean expressions.</td>
@@ -629,7 +655,7 @@
         Checks for overly complicated boolean return statements.</td>
       </tr>
       <tr>
-        <td><a href="config_naming.html#StaticVariableName">StaticVariableName</a></td>
+        <td><a href="config_naming.html#Modules">StaticVariableName</a></td>
         <td>
           Checks that static, non-final variable names conform to a format specified
         by the format property.</td>
@@ -644,6 +670,11 @@
         <td><a href="config_coding.html#StringLiteralEquality">StringLiteralEquality</a></td>
         <td>Checks that string literals are not used with
         <code>==</code> or <code>&#33;=</code>.</td>
+      </tr>
+      <tr>
+        <td><a href="config_javadoc.html#SummaryJavadoc">SummaryJavadoc</a></td>
+        <td>
+        Checks that Javadoc summary sentence does not contain phrases that are not recommended to use.</td>
       </tr>
       <tr>
         <td><a href="config_coding.html#SuperClone">SuperClone</a></td>

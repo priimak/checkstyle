@@ -20,7 +20,7 @@ package com.puppycrawl.tools.checkstyle.api;
 
 import java.util.BitSet;
 
-import antlr.CommonAST;
+import antlr.CommonASTWithHiddenTokens;
 import antlr.Token;
 import antlr.collections.AST;
 
@@ -35,7 +35,7 @@ import antlr.collections.AST;
  * @version 1.0
  * @see <a href="http://www.antlr.org/">ANTLR Website</a>
  */
-public final class DetailAST extends CommonAST
+public final class DetailAST extends CommonASTWithHiddenTokens
 {
     /** For Serialisation that will never happen. */
     private static final long serialVersionUID = -2580884815577559874L;
@@ -78,6 +78,8 @@ public final class DetailAST extends CommonAST
         setType(da.getType());
         mLineNo = da.getLineNo();
         mColumnNo = da.getColumnNo();
+        hiddenAfter = da.getHiddenAfter();
+        hiddenBefore = da.getHiddenBefore();
     }
 
     @Override
@@ -99,6 +101,51 @@ public final class DetailAST extends CommonAST
         }
         if (aAST != null) {
             ((DetailAST) aAST).setPreviousSibling(this);
+        }
+    }
+
+    /**
+     * Add previous sibling.
+     * @param aAST
+     *        DetailAST object.
+     */
+    public void addPreviousSibling(DetailAST aAST)
+    {
+        if (aAST != null) {
+            aAST.setParent(mParent);
+            final DetailAST previousSibling = this.getPreviousSibling();
+
+            if (previousSibling != null) {
+                aAST.setPreviousSibling(previousSibling);
+                previousSibling.setNextSibling(aAST);
+            }
+            else if (mParent != null) {
+                mParent.setFirstChild(aAST);
+            }
+
+            aAST.setNextSibling(this);
+            this.setPreviousSibling(aAST);
+        }
+    }
+
+    /**
+     * Add next sibling.
+     * @param aAST
+     *        DetailAST object.
+     */
+    public void addNextSibling(DetailAST aAST)
+    {
+        if (aAST != null) {
+            aAST.setParent(mParent);
+            final DetailAST nextSibling = this.getNextSibling();
+
+            if (nextSibling != null) {
+                aAST.setNextSibling(nextSibling);
+                nextSibling.setPreviousSibling(aAST);
+            }
+
+            aAST.setPreviousSibling(this);
+            this.setNextSibling(aAST);
         }
     }
 
@@ -174,16 +221,39 @@ public final class DetailAST extends CommonAST
         if (mLineNo == NOT_INITIALIZED) {
             // an inner AST that has been initialized
             // with initialize(String text)
-            final DetailAST child = getFirstChild();
-            final DetailAST sibling = getNextSibling();
-            if (child != null) {
-                return child.getLineNo();
+            DetailAST child = getFirstChild();
+            while (child != null) {
+                // comment node can't be start of any java statement/definition
+                if (TokenTypes.isCommentType(child.getType())) {
+                    child = child.getNextSibling();
+                }
+                else {
+                    return child.getLineNo();
+                }
             }
-            else if (sibling != null) {
-                return sibling.getLineNo();
+
+            DetailAST sibling = getNextSibling();
+            while (sibling != null) {
+                // comment node can't be start of any java statement/definition
+                if (TokenTypes.isCommentType(sibling.getType())) {
+                    sibling = sibling.getNextSibling();
+                }
+                else {
+                    return sibling.getLineNo();
+                }
             }
         }
         return mLineNo;
+    }
+
+    /**
+     * Set line number.
+     * @param aLineNo
+     *        line number.
+     */
+    public void setLineNo(int aLineNo)
+    {
+        mLineNo = aLineNo;
     }
 
     /** @return the column number **/
@@ -192,16 +262,39 @@ public final class DetailAST extends CommonAST
         if (mColumnNo == NOT_INITIALIZED) {
             // an inner AST that has been initialized
             // with initialize(String text)
-            final DetailAST child = getFirstChild();
-            final DetailAST sibling = getNextSibling();
-            if (child != null) {
-                return child.getColumnNo();
+            DetailAST child = getFirstChild();
+            while (child != null) {
+                // comment node can't be start of any java statement/definition
+                if (TokenTypes.isCommentType(child.getType())) {
+                    child = child.getNextSibling();
+                }
+                else {
+                    return child.getColumnNo();
+                }
             }
-            else if (sibling != null) {
-                return sibling.getColumnNo();
+
+            DetailAST sibling = getNextSibling();
+            while (sibling != null) {
+                // comment node can't be start of any java statement/definition
+                if (TokenTypes.isCommentType(sibling.getType())) {
+                    sibling = sibling.getNextSibling();
+                }
+                else {
+                    return sibling.getColumnNo();
+                }
             }
         }
         return mColumnNo;
+    }
+
+    /**
+     * Set column number.
+     * @param aColumnNo
+     *        column number.
+     */
+    public void setColumnNo(int aColumnNo)
+    {
+        mColumnNo = aColumnNo;
     }
 
     /** @return the last child node */
@@ -308,4 +401,5 @@ public final class DetailAST extends CommonAST
     {
         return (DetailAST) super.getFirstChild();
     }
+
 }

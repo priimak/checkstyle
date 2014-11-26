@@ -19,7 +19,7 @@
                 </p>
 
                 <p>
-                    <a href="http://maxvetrenko.github.io/">Checkstyle's html report for Guava library</a>
+                    <a href="reports/google-style/guava/">Checkstyle's html report for Guava library</a>
                 </p>
                 <p>
                     <a
@@ -585,10 +585,10 @@
                                     href="http://google-styleguide.googlecode.com/svn/trunk/javaguide.html#s4.5.2-line-wrapping-indent">4.5.2 Indent continuation lines at least +4 spaces</a>
                             </td>
                             <td>
-                                <!-- <img
+                                <img
                                     src="images/ok_green.png"
-                                    alt="" /> -->
-                                <a href="https://github.com/maxvetrenko/checkstyle/issues/26">Indentation</a>
+                                    alt="" />
+                                <a href="config_misc.html#Indentation">Indentation</a>
                             </td>
                             <td>
                                 <a
@@ -731,7 +731,7 @@
                                     src="images/ok_green.png"
                                     alt="" />
                                 <a
-                                    href="https://github.com/maxvetrenko/sevntu.checkstyle/blob/master/sevntu-checks/src/main/java/com/github/sevntu/checkstyle/checks/design/VariableDeclarationUsageDistanceCheck.java">VariableDeclarationUsageDistance</a>
+                                    href="config_coding.html#VariableDeclarationUsageDistance">VariableDeclarationUsageDistance</a>
                                 <br />
                             </td>
                             <td>
@@ -848,9 +848,18 @@
                                     href="http://google-styleguide.googlecode.com/svn/trunk/javaguide.html#s4.8.5-annotations">4.8.5 Annotations</a>
                             </td>
                             <td>
-                                <a href="https://github.com/maxvetrenko/checkstyle/issues/19">AnnotationIndentation</a>
+                                <img
+                                    src="images/ok_green.png"
+                                    alt="" />
+                                <a href="config_annotation.html#AnnotationLocation">AnnotationLocation</a>
                             </td>
-                            <td></td>
+                            <td>
+                              <a
+                                    href="https://github.com/checkstyle/checkstyle/blob/master/google_checks.xml#L167">config</a>
+                                <br />
+                                <a
+                                    href="https://github.com/maxvetrenko/google-style-config-test/blob/master/src/test/java/com/google/checkstyle/test/chapter4formatting/rule485annotations/AnnotationLocationTest.java">test</a>
+                            </td>
                         </tr>
                         <tr>
                             <td>
@@ -867,10 +876,11 @@
                             </td>
                             <td>
                                 <img
-                                    src="images/ban_red.png"
+                                    src=""
                                     alt="" />
+                                future plan: <a href="https://github.com/checkstyle/checkstyle/issues/333">CommentIndentation</a> as after 6.0 release it is become possible.
                             </td>
-                            <td></td>
+                            <td>[]</td>
                         </tr>
                         <tr>
                             <td>
@@ -985,10 +995,12 @@
                             </td>
                             <td>
                                 <img
-                                    src="images/ban_red.png"
+                                    src="images/ok_blue.png"
                                     alt="" />
+                                <a href="config_naming.html">MethodName</a>
+                                <br/> No ability to distinguish verb at the beggining of name, no way distinguish Test method from others so "_" is allowed in names
                             </td>
-                            <td></td>
+                            <td>[]</td>
                         </tr>
                         <tr>
                             <td>
@@ -999,11 +1011,7 @@
                                 <img
                                     src="images/ban_red.png"
                                     alt="" />
-                                Every constant is a static final field,
-                                <br />
-                                but not all static final fields are
-                                <br />
-                                constants - impossible to check such rule.
+                                Every constant is a static final field, but not all static final fields are constants - impossible to check such rule.
                             </td>
                             <td></td>
                         </tr>
@@ -1168,6 +1176,7 @@
                                 <img
                                     src="images/ban_red.png"
                                     alt="" />
+                                    Proper validation require parsing other files, sources are not always awailable.
                             </td>
                             <td></td>
                         </tr>
@@ -1217,7 +1226,10 @@
                                     href="http://google-styleguide.googlecode.com/svn/trunk/javaguide.html#s7.1.1-javadoc-multi-line">7.1.1 General form</a>
                             </td>
                             <td>
-                                <a href="https://github.com/maxvetrenko/checkstyle/issues/18">SingleLineJavaDoc</a>
+                                <img
+                                    src="images/ok_green.png"
+                                    alt="" />
+                                <a href="config_javadoc.html#SingleLineJavadoc">SingleLineJavadoc</a>
                             </td>
                             <td>[]</td>
                         </tr>
@@ -1227,7 +1239,10 @@
                                     href="http://google-styleguide.googlecode.com/svn/trunk/javaguide.html#s7.1.2-javadoc-paragraphs">7.1.2 Paragraphs</a>
                             </td>
                             <td>
-                                <a href="https://github.com/maxvetrenko/checkstyle/issues/3">JavaDocParagraph</a>
+                            <img
+                                    src="images/ok_green.png"
+                                    alt="" />
+                                <a href="config_javadoc.html#JavadocParagraph">JavaDocParagraph</a>
                             </td>
                             <td>[]</td>
                         </tr>
@@ -1237,13 +1252,22 @@
                                     href="http://google-styleguide.googlecode.com/svn/trunk/javaguide.html#s7.1.3-javadoc-at-clauses">7.1.3 At-clauses</a>
                             </td>
                             <td>
-                                <a href="https://github.com/maxvetrenko/checkstyle/issues/7">AtClauseOrder</a>
+                            <img
+                                    src="images/ok_green.png"
+                                    alt="" />
+                                <a href="config_javadoc.html#AtclauseOrder">AtclauseOrder</a>
                                 <br/>
-                                <a href="https://github.com/maxvetrenko/checkstyle/issues/8">JavaDocTagCuntionuousIndentation</a>
+                                <img
+                                    src="images/ok_green.png"
+                                    alt="" />
+                                <a href="config_javadoc.html#JavadocTagContinuationIndentation">JavadocTagContinuationIndentation</a>
                                 <br/>
-                                <a href="https://github.com/maxvetrenko/checkstyle/issues/9">NonEmptyAtClauseDescription</a>
+                                <img
+                                    src="images/ok_green.png"
+                                    alt="" />
+                                <a href="config_javadoc.html#NonEmptyAtclauseDescription">NonEmptyAtclauseDescription</a>
                             </td>
-                            <td>[]</td>
+                            <td>[]<br/>[]<br/>[]</td>
                         </tr>
                         <tr>
                             <td>
@@ -1251,12 +1275,10 @@
                                     href="http://google-styleguide.googlecode.com/svn/trunk/javaguide.html#s7.2-summary-fragment">7.2 The summary fragment</a>
                             </td>
                             <td>
-                                <a href="https://github.com/maxvetrenko/checkstyle/issues/17">SummaryJavaDocCheck</a>
-                                (check for text before any at-clause).
-                                <br />
-                                additionally we need to have list of forbidden phrases
-                                <br />
-                                in the beginning of summary (regexp).
+                            <img
+                                    src="images/ok_green.png"
+                                    alt="" />
+                                <a href="config_javadoc.html#SummaryJavadoc">SummaryJavadoc</a>
                             </td>
                             <td>[]</td>
                         </tr>
@@ -1268,8 +1290,11 @@
                                 </a>
                             </td>
                             <td>
+                            <img
+                                    src="images/ok_green.png"
+                                    alt="" />
                                 <a
-                                    href="https://github.com/sevntu-checkstyle/sevntu.checkstyle/issues/70">JavadocMethod</a>
+                                    href="config_javadoc.html#JavadocMethod">JavadocMethod</a>
                             </td>
                             <td>[]</td>
                         </tr>
@@ -1279,9 +1304,12 @@
                                     href="http://google-styleguide.googlecode.com/svn/trunk/javaguide.html#s7.3.1-javadoc-exception-self-explanatory">7.3.1 Exception: self-explanatory methods</a>
                             </td>
                             <td>
-                                <a href="https://github.com/maxvetrenko/checkstyle/issues/11">JavadocSelfExplanatoryMethod</a>
+                            <img
+                                    src="images/ok_green.png"
+                                    alt="" />
+                                <a href="config_javadoc.html#JavadocMethod">JavadocMethod</a>
                             </td>
-                            <td></td>
+                            <td>[]</td>
                         </tr>
                         <tr>
                             <td>
@@ -1289,9 +1317,13 @@
                                     href="http://google-styleguide.googlecode.com/svn/trunk/javaguide.html#s7.3.2-javadoc-exception-overrides">7.3.2 Exception: overrides</a>
                             </td>
                             <td>
-                                <a href="https://github.com/maxvetrenko/checkstyle/issues/35">JavadocMethodCheck</a> Overrides are checked by presense of "@Override" annotation on method.
+                                <img
+                                    src="images/ok_blue.png"
+                                    alt="" />
+                                <a href="config_javadoc.html#JavadocMethod">JavadocMethod</a>
+                                <br/> Overrides are checked by presense of "@Override" annotation on method.
                             </td>
-                            <td></td>
+                            <td>[]</td>
                         </tr>
                     </tbody>
                 </table>

@@ -229,8 +229,7 @@ public class CustomImportOrderCheck extends Check
      * @param aInputCustomImportOrder
      *        user value.
      */
-    public final void
-    setCustomImportOrderRules(final String aInputCustomImportOrder)
+    public final void setCustomImportOrderRules(final String aInputCustomImportOrder)
     {
         mCustomImportOrderRules.clear();
         try {
@@ -364,12 +363,13 @@ public class CustomImportOrderCheck extends Check
     private String getNextImportGroup(int aCurrentGroupNumber)
     {
         int nextGroupNumber = aCurrentGroupNumber;
-        for (; mCustomImportOrderRules.size() > nextGroupNumber; nextGroupNumber++)
-        {
+
+        while (mCustomImportOrderRules.size() > nextGroupNumber + 1) {
             if (hasAnyImportInCurrentGroup(mCustomImportOrderRules.get(nextGroupNumber)))
             {
                 break;
             }
+            nextGroupNumber++;
         }
         return mCustomImportOrderRules.get(nextGroupNumber);
     }
@@ -612,7 +612,7 @@ public class CustomImportOrderCheck extends Check
     {
         //  [lineNo - 2] is the number of the previous line
         //  because the numbering starts from zero.
-        final String lineBefore = getLines()[aLineNo - 2];
+        final String lineBefore = getLine(aLineNo - 2);
         return lineBefore.trim().isEmpty();
     }
 
